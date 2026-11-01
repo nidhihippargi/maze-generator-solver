@@ -65,8 +65,18 @@ class Maze:
         self.grid[self.start[0]][self.start[1]] = 'S'
         self.grid[self.end[0]][self.end[1]] = 'E'
 
-    def display(self):
-        """Display the generated maze in the terminal."""
 
-        for row in self.grid:
-            print(' '.join(row))
+    def display(self, player_position=None):
+        """Display the maze and the player's current position."""
+
+        for r in range(self.rows):
+            row_display = []
+
+            for c in range(self.cols):
+                if player_position == (r, c):
+                    row_display.append('P')
+                else:
+                    row_display.append(self.grid[r][c])
+
+            print(' '.join(row_display))
+

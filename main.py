@@ -1,5 +1,6 @@
 
 from maze import Maze
+from player import Player
 
 
 def select_difficulty():
@@ -20,7 +21,39 @@ def select_difficulty():
         elif choice == '3':
             return 21, 21
         else:
-            print("Invalid choice. Please select 1, 2, or 3.")
+            print("Invalid choice. Please try again.")
+
+
+def play_game(maze, player):
+    """Run the maze navigation game."""
+
+    print("\nUse W, A, S, D to move.")
+    print("Enter Q to quit the game.")
+
+    while not player.has_won(maze):
+
+        print("\n")
+        maze.display(player.position)
+
+        print(f"\nPlayer: {player.name}")
+        print(f"Moves: {player.moves}")
+
+        direction = input("Your move: ").strip().upper()
+
+        if direction == 'Q':
+            print("\nGame exited.")
+            return
+
+        player.move(direction, maze)
+
+    print("\n")
+    maze.display(player.position)
+
+    print("\n================================")
+    print("       MAZE COMPLETED!")
+    print("================================")
+    print(f"Player: {player.name}")
+    print(f"Total moves: {player.moves}")
 
 
 def main():
@@ -28,16 +61,19 @@ def main():
     print("       MAZE GENERATOR")
     print("================================")
 
+    name = input("\nEnter your name: ").strip()
+
+    if not name:
+        name = "Player"
+
     rows, cols = select_difficulty()
 
     maze = Maze(rows, cols)
     maze.generate()
 
-    print(f"\nGenerated Maze: {rows} x {cols}")
-    print("S = Start | E = Exit | | = Wall")
-    print("Spaces represent accessible paths.\n")
+    player = Player(name, maze.start)
 
-    maze.display()
+    play_game(maze, player)
 
 
 if __name__ == "__main__":
