@@ -7,19 +7,19 @@ def select_difficulty():
     """Allow the user to select a maze difficulty."""
 
     print("\nSelect Difficulty")
-    print("1. Easy   (9 x 9)")
-    print("2. Medium (15 x 15)")
-    print("3. Hard   (21 x 21)")
+    print("1. Easy   (15 x 15)")
+    print("2. Medium (21 x 21)")
+    print("3. Hard   (31 x 31)")
 
     while True:
         choice = input("\nEnter your choice (1-3): ")
 
         if choice == '1':
-            return 9, 9
+            return 7, 7
         elif choice == '2':
-            return 15, 15
+            return 10, 10
         elif choice == '3':
-            return 21, 21
+            return 15, 15
         else:
             print("Invalid choice. Please try again.")
 
@@ -28,6 +28,7 @@ def play_game(maze, player):
     """Run the maze navigation game."""
 
     print("\nUse W, A, S, D to move.")
+    print("Enter B to view the BFS solution.")
     print("Enter Q to quit the game.")
 
     while not player.has_won(maze):
@@ -43,8 +44,15 @@ def play_game(maze, player):
         if direction == 'Q':
             print("\nGame exited.")
             return
+        if direction == 'B':
+            path = maze.solve()
+            maze.display_solution(path)
 
-        player.move(direction, maze)
+        if path:
+            print("\nShortest path moves:", len(path) - 1)
+
+        continue
+    player.move(direction, maze)
 
     print("\n")
     maze.display(player.position)
@@ -78,4 +86,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
