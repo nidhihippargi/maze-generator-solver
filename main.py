@@ -1,4 +1,6 @@
+import time
 
+from scoreboard import calculate_score, save_score, display_scoreboard
 from maze import Maze
 from player import Player
 
@@ -31,6 +33,8 @@ def play_game(maze, player):
     print("Enter B to view the BFS solution.")
     print("Enter Q to quit the game.")
 
+    start_time = time.time()
+
     while not player.has_won(maze):
 
         print("\n")
@@ -48,11 +52,11 @@ def play_game(maze, player):
             path = maze.solve()
             maze.display_solution(path)
 
-        if path:
-            print("\nShortest path moves:", len(path) - 1)
+            if path:
+                print("\nShortest path moves:", len(path) - 1)
 
-        continue
-    player.move(direction, maze)
+            continue
+        player.move(direction, maze)
 
     print("\n")
     maze.display(player.position)
@@ -62,6 +66,16 @@ def play_game(maze, player):
     print("================================")
     print(f"Player: {player.name}")
     print(f"Total moves: {player.moves}")
+    elapsed_time = time.time() - start_time
+
+    score = calculate_score(player.moves, elapsed_time)
+
+    print(f"Completion time: {elapsed_time:.2f} seconds")
+    print(f"Your score: {score}")
+
+    save_score(player.name, player.moves, elapsed_time, score)
+
+    display_scoreboard()
 
 
 def main():
