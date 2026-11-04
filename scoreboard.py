@@ -1,6 +1,6 @@
+
 import json
 import os
-
 
 SCOREBOARD_FILE = "scoreboard.json"
 
@@ -16,10 +16,15 @@ def calculate_score(moves, elapsed_time):
 def save_score(name, moves, elapsed_time, score):
     """Save completed game details to a JSON file."""
 
-    if os.path.exists(SCOREBOARD_FILE):
+    # Read existing scores safely
+    try:
         with open(SCOREBOARD_FILE, "r") as file:
             scores = json.load(file)
-    else:
+
+        if not isinstance(scores, list):
+            scores = []
+
+    except (json.JSONDecodeError, FileNotFoundError, OSError):
         scores = []
 
     result = {
@@ -33,6 +38,7 @@ def save_score(name, moves, elapsed_time, score):
 
     scores.sort(key=lambda item: item["score"], reverse=True)
 
+    # Save updated scores
     with open(SCOREBOARD_FILE, "w") as file:
         json.dump(scores, file, indent=4)
 
@@ -40,12 +46,15 @@ def save_score(name, moves, elapsed_time, score):
 def display_scoreboard():
     """Display all saved scores."""
 
-    if not os.path.exists(SCOREBOARD_FILE):
-        print("\nNo scores recorded yet.")
-        return
+    try:
+        with open(SCOREBOARD_FILE, "r") as file:
+            scores = json.load(file)
 
-    with open(SCOREBOARD_FILE, "r") as file:
-        scores = json.load(file)
+        if not isinstance(scores, list):
+            scores = []
+
+    except (json.JSONDecodeError, FileNotFoundError, OSError):
+        scores = []
 
     if not scores:
         print("\nNo scores recorded yet.")
@@ -62,3 +71,4 @@ def display_scoreboard():
         )
 
     print("===============================")
+
